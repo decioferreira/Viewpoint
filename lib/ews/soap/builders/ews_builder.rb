@@ -21,9 +21,11 @@ module Viewpoint::EWS::SOAP
   # know how to build themselves so each parent element can delegate creation of
   # subelements to a method of the same name with a '!' after it.
   class EwsBuilder
+    include ::Viewpoint::EWS::SOAP
 
     attr_reader :nbuild
     def initialize
+      super
       @nbuild = Nokogiri::XML::Builder.new
     end
 
@@ -47,10 +49,12 @@ module Viewpoint::EWS::SOAP
       @nbuild.Envelope(NAMESPACES) do |node|
         node.parent.namespace = parent_namespace(node)
         node.Header {
+          @nbuild.parent.namespace = parent_namespace(node.parent)
           set_version_header! opts[:server_version]
           yield(:header, self) if block_given?
         }
         node.Body {
+          @nbuild.parent.namespace = parent_namespace(node.parent)
           yield(:body, self) if block_given?
         }
       end
