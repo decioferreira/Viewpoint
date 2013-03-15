@@ -25,6 +25,10 @@ module Viewpoint::EWS::Types
       importance:     [:importance, :text],
       conversation_index:     [:conversation_index, :text],
       conversation_topic:     [:conversation_topic, :text],
+
+      date_time_received: [:date_time_received, :text],
+      to_recipients: [:to_recipients, :elems, 0, :mailbox, :elems],
+      reply_to: [:reply_to, :elems, 0, :mailbox, :elems]
     }
 
     ITEM_KEY_TYPES = {

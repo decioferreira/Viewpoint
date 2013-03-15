@@ -115,7 +115,7 @@ module Viewpoint::EWS
 
     def resolve_key_path(hsh, path)
       k = path.first
-      return hsh[k] if path.length == 1
+      return hsh[k] if hsh[k].nil? || path.length == 1
       resolve_key_path(hsh[k],path[1..-1])
     end
 
