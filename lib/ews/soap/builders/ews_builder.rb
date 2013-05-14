@@ -293,10 +293,21 @@ module Viewpoint::EWS::SOAP
     # Build the AdditionalProperties element
     # @see http://msdn.microsoft.com/en-us/library/aa563810.aspx
     def additional_properties!(addprops)
-      if(addprops[:FieldURI] && !addprops[:FieldURI].empty?)
+      has_FieldURI = addprops[:FieldURI] && !addprops[:FieldURI].empty?
+      has_IndexedFieldURI = addprops[:IndexedFieldURI] && !addprops[:IndexedFieldURI].empty?
+      if has_FieldURI || has_IndexedFieldURI
         @nbuild[NS_EWS_TYPES].AdditionalProperties {
-          addprops[:FieldURI].each do |uri|
-            @nbuild[NS_EWS_TYPES].FieldURI('FieldURI' => uri)
+          if has_FieldURI
+            addprops[:FieldURI].each do |uri|
+              @nbuild[NS_EWS_TYPES].FieldURI('FieldURI' => uri)
+            end
+          end
+          if has_IndexedFieldURI
+            addprops[:IndexedFieldURI].each do |uri, values|
+              values.each do |value|
+                @nbuild[NS_EWS_TYPES].IndexedFieldURI('FieldURI' => uri, 'FieldIndex' => value)
+              end
+            end
           end
         }
       end
